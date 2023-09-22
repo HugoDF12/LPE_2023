@@ -8,17 +8,17 @@
 
 # LOADING LIBRARIES -------------------------------------------------------
   
-  install.packages("tydiverse")
+  install.packages("tidyverse")
 
 # LOADING DATA ------------------------------------------------------------
 
-  # DPLYR
+  jsonlite::fromJSON()
 
 # SHORTCUTS ---------------------------------------------------------------
 
   # CLEAN CONSOLE = CRTL + l
   # %>% = pipe operator -> shift + crtl + m
-  # run line = shift + enter
+  # run line = ctrl + enter
 
 # GIT COMMANDS ------------------------------------------------------------
 
@@ -36,6 +36,6 @@
 
 # BASIC INSTRUCTIONS ------------------------------------------------------
 
-  hugo<-8 #assigning values
+  hugo<-8 # assigning values
   
   
