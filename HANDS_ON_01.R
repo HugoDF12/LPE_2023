@@ -8,11 +8,12 @@
 
 # LOADING LIBRARIES -------------------------------------------------------
   
-  install.packages("tidyverse")
+  install.packages (c("tidyverse","dplyr"))
+  library("dplyr")
 
 # LOADING DATA ------------------------------------------------------------
 
-  jsonlite::fromJSON()
+  exp_22152945<-jsonlite::fromJSON("https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes/EstacionesTerrestres/")
 
 # SHORTCUTS ---------------------------------------------------------------
 
@@ -37,5 +38,7 @@
 # BASIC INSTRUCTIONS ------------------------------------------------------
 
   hugo<-8 # assigning values
-  
-  
+
+# TIDYVERSE COMMANDS ------------------------------------------------------
+
+  exp_22152945 %>% glimpse() %>% View()
