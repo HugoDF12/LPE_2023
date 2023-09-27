@@ -45,10 +45,12 @@
   exp_22152945 %>% glimpse() %>% View()
   
 
-# 27SEP2023 ---------------------------------------------------------------
+# 27 Septiembre 2023 ------------------------------------------------------
+
 
   str(exp_22152945) # get data type
   df <- exp_22152945$ListaEESSPrecio # get variable data
+  df %>% glimpse()
   
   
   
