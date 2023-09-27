@@ -53,6 +53,8 @@
   
   df %>% janitor::clean_names() %>% glimpse() # limpiar nombre columnas
   
+  # Fin de la clase de hoy, siguiente hacemos la entrega
+  
   
   
 
