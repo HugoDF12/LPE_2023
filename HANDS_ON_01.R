@@ -20,6 +20,7 @@
   # CLEAN CONSOLE = CRTL + l
   # %>% = pipe operator -> shift + crtl + m
   # run line = ctrl + enter
+  # assing value = alt + -
 
 # GIT COMMANDS ------------------------------------------------------------
 
@@ -37,11 +38,17 @@
 
 # BASIC INSTRUCTIONS ------------------------------------------------------
 
-  hugo<-8 # assigning values
+  hugo <-8 # assigning values
 
 # TIDYVERSE COMMANDS ------------------------------------------------------
 
   exp_22152945 %>% glimpse() %>% View()
+  
+
+# 27SEP2023 ---------------------------------------------------------------
+
+  str(exp_22152945) # get data type
+  df <- exp_22152945$ListaEESSPrecio # get variable data
   
   
   
