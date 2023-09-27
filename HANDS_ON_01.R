@@ -8,8 +8,8 @@
 
 # LOADING LIBRARIES -------------------------------------------------------
   
-  install.packages (c("tidyverse","dplyr"))
-  library("dplyr")
+  install.packages (c("tidyverse","dplyr","janitor"))
+  library("dplyr","janitor")
 
 # LOADING DATA ------------------------------------------------------------
 
@@ -50,7 +50,9 @@
 
   str(exp_22152945) # get data type
   df <- exp_22152945$ListaEESSPrecio # get variable data
-  df %>% glimpse()
+  
+  df %>% janitor::clean_names() %>% glimpse() # limpiar nombre columnas
   
   
   
+
