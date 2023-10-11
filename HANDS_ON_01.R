@@ -70,12 +70,13 @@
   villa_boa_gas <- clean_data %>% select(precio_gasoleo_a, rotulo, direccion, localidad) %>% 
     filter(localidad=="VILLAVICIOSA DE ODON" | localidad== "BOADILLA DEL MONTE") %>% 
     arrange(precio_gasoleo_a) %>% View()
-  gas_max <- clean_data %>% select(precio_gasoleo_a, rotulo, direccion, provincia) %>%
+  
+  gas_max_mad <- clean_data %>% select(precio_gasoleo_a, rotulo, direccion, provincia) %>%
     filter(provincia == "MADRID") %>%
     arrange(precio_gasoleo_a) %>% View()
   
   # STORING DATA ------------------------------------------------------------
-  write.csv(gas_max, "gas_max.csv")
+  write.csv(gas_max_mad, "gas_max_mad.csv")
   xlsx::write.xlsx(gas_max, "gas_max.xlsx")
 
   
