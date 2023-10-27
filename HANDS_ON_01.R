@@ -11,6 +11,7 @@ install.packages("leaflet")
 library(tidyverse)
 library(janitor)
 library(leaflet)
+library(readxl)
 
 # LOADING DATA ------------------------------------------------------------
 exp_22103198 <- jsonlite::fromJSON("https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes/EstacionesTerrestres/")
@@ -109,3 +110,25 @@ gas_mad_mean_rotulo <- clean_data_2 %>% group_by(rotulo) %>% summarise(mean(prec
 # DEALING W COLS ----------------------------------------------------------
 
 clean_data_2 %>% mutate(low_cost = !rotulo %in% c("REPSOL","CEPSA","Q8","BP","SHELL","CAMPSA","GALP")) %>% View()
+
+
+# MEDIA GASOLEO_A EXTREMADURA ---------------------------------------------
+
+gas_a_mean_ext <- clean_data_2 %>% select(precio_gasoleo_a, provincia, idccaa) %>% 
+filter(idccaa == "11") %>% summarise(mean_precio_gasoleo_a_ext = mean(precio_gasoleo_a, na.rm = TRUE)) %>% View()
+
+# JOIN IDCCAA A COMUNIDAD AUTÓNOMA ----------------------------------------
+
+ccaa <- read_excel("codccaa_OFFCIAL.xls", skip=1)
+merged_df <- df %>% 
+  left_join(ccaa, by = c("IDCCAA" = "CODIGO")) %>% 
+  rename("Comunidad_Autonoma" = LITERAL) %>% View()
+
+# REPLACE IDCCAA ----------------------------------------------------------
+
+copied_df <- merged_df
+
+copied_df$Comunidad_Autonoma[copied_df$IDCCAA == "07"] <- "Castilla-La Mancha"
+copied_df$Comunidad_Autonoma[copied_df$IDCCAA == "08"] <- "Castilla y León"
+
+copied_df %>% View()
