@@ -1,83 +1,111 @@
+# SCRIPT + STUDENT INFO ---------------------------------------------------
+# NOMBRE: Hugo De Francisco
+# EXP: 22152945
+# TEMA: HANDS_ON_01
 
-# SCRPT + STUDENT INFO ----------------------------------------------------
 
-  # NOMBRE: Hugo De Francisco Benito
-  # EXP:22152945
-  # TEMA: HANDS_ON_01
-
-# LOADING LIBRARIES -------------------------------------------------------
-  
-  install.packages(c("tidyverse", "dplyr", "janitor","xlsx"))
-  library("dplyr","janitor","readr")
-  library("xlsx")
-
+# LOADING LIBS ------------------------------------------------------------
+install.packages("tidyverse")
+install.packages("janitor", "readr")
+install.packages("leaflet")
+library(tidyverse)
+library(janitor)
+library(leaflet)
 
 # LOADING DATA ------------------------------------------------------------
+exp_22103198 <- jsonlite::fromJSON("https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes/EstacionesTerrestres/")
 
-  exp_22152945<-jsonlite::fromJSON("https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes/EstacionesTerrestres/")
 
 # SHORTCUTS ---------------------------------------------------------------
 
-  # CLEAN CONSOLE = CRTL + l
-  # %>% = pipe operator -> shift + crtl + m
-  # run line = ctrl + enter
-  # assing value = alt + -
+# CLEAN CONSOLE = CTRL + l
+# %>% pipe operator = SHIFT + CTRL + M
+# CTRL + ENTER = run line
+# assign value = alt + -
+# clear terminal = clear
+
 
 # GIT COMMANDS ------------------------------------------------------------
 
-  # git status = info about a repo
-  # git commit = add a commit
-  # git add . = add the current dir to the entire repo
-  # git push -u origin main = send to the remote repo (Git hub)
+# pwd = current location
+# git status = info about a repo
+# git commit = Add a comment
+# git add . = Add the current dir to the entire repo
+# git push -u origin main = send to the remote repo (Github)
+
 
 # CLI COMMANDS ------------------------------------------------------------
 
-  # pwd = shows the current location
-  # ls = list terminal
-  # mkdir = create a dir
-  # cd = change dir
-  # clear terminal = clear
+# pwd = shows the current dir
+# ls = list terminal 
+# mkdir = create a dir
+# cd = change dir
+
 
 # BASIC INSTRUCTIONS ------------------------------------------------------
 
-  hugo <- 8 # assigning values
+# Operators
+# and = & or ,
+# or = |
+
+isa <- 8 # assigning values
+
 
 # TIDYVERSE COMMANDS ------------------------------------------------------
 
-  exp_22152945 %>% glimpse() %>% View()
-
-# 27 Septiembre 2023 ------------------------------------------------------
-
-  str(exp_22152945) # get data type
-  df <- exp_22152945$ListaEESSPrecio # get variable data
-  
-  df %>% janitor::clean_names() %>% glimpse() # limpiar nombre columnas
-  
-  # Fin de la clase de hoy, siguiente hacemos la entrega
-
-# 29 Septiembre 2023 ------------------------------------------------------
+exp_22103198 %>% glimpse() %>% View()
 
 
-# Working W Pipes (OPT.MODE) ----------------------------------------------
+# 27 SEP 2023 -------------------------------------------------------------
 
-  clean_df <- df %>% janitor::clean_names() %>% glimpse()
-  clean_data <- df %>% readr::type_convert(locale = readr::locale(decimal_mark = ",")) %>% janitor::clean_names()
-  
-  clean_data %>% glimpse()
-  
-  # DEALING W DATA ----------------------------------------------------------
-  
-  villa_boa_gas <- clean_data %>% select(precio_gasoleo_a, rotulo, direccion, localidad) %>% 
-    filter(localidad=="VILLAVICIOSA DE ODON" | localidad== "BOADILLA DEL MONTE") %>% 
-    arrange(precio_gasoleo_a) %>% View()
-  
-  gas_max_mad <- clean_data %>% select(precio_gasoleo_a, rotulo, direccion, provincia) %>%
-    filter(provincia == "MADRID") %>%
-    arrange(precio_gasoleo_a) %>% View()
-  
-  # STORING DATA ------------------------------------------------------------
-  write.csv(gas_max_mad, "gas_max_mad.csv")
-  xlsx::write.xlsx(gas_max, "gas_max.xlsx")
+str(exp_22103198) # get data type
+df <- exp_22103198$ListaEESSPrecio # get readable data
+glimpse(df)
+df %>% janitor::clean_names() %>% glimpse()
+# fin de la clase de hoy, siguiente hacemos la entrega
 
-  
-  
+
+# WORKING W/ PIPES (OPT. MODE) -------------------------------------------------------------
+clean_data <- df %>% janitor::clean_names() %>% glimpse()
+
+clean_data_2 <- df %>% readr::type_convert(locale = readr::locale(decimal_mark=",")) %>% clean_names() %>% as_tibble()
+clean_data_2 %>% glimpse()
+
+
+# DEALING W DATA ----------------------------------------------------------
+
+villa_boa_gas <- clean_data_2 %>% select(precio_gasoleo_a, rotulo, direccion, localidad) %>% 
+  filter(localidad=="VILLAVICIOSA DE ODON" | localidad== "BOADILLA DEL MONTE") %>% 
+  arrange(precio_gasoleo_a) %>% View()
+
+gas_max <- clean_data_2 %>% select(precio_gasoleo_a, rotulo, direccion, provincia) %>% 
+  filter(provincia == "MADRID") %>% arrange(precio_gasoleo_a) %>%  View()
+
+
+# STORING DATA ------------------------------------------------------------
+
+write_excel_csv(villa_boa_gas, "informe_madrid.xls")
+
+
+# WORKING W REPORTS -------------------------------------------------------
+
+# Todas las estaciones de la comunidad de madrid para el gasóleo, 
+# ordenado descendiente
+
+gas_mad_1_55 <- clean_data_2 %>% select(precio_gasoleo_a, rotulo, direccion, localidad, provincia, latitud, longitud_wgs84) %>% 
+  filter(provincia == "MADRID" & precio_gasoleo_a<1.50) %>% arrange(desc(precio_gasoleo_a)) %>% write_excel_csv2("gasoleo_a_1_50.xls")
+
+gas_mad_1_55 %>% leaflet() %>% addTiles() %>% addCircleMarkers(lat = ~latitud, lng = ~longitud_wgs84, popup=~rotulo, label=~precio_gasoleo_a)
+
+
+# CLASE 18 OCT ------------------------------------------------------------
+
+gas_mad_ballenoil <- clean_data_2 %>% select(precio_gasoleo_a, rotulo, direccion, localidad, provincia) %>% 
+  filter(provincia == "MADRID" & rotulo == "BALLENOIL") %>% arrange(precio_gasoleo_a) %>% View()
+
+gas_mad_mean_rotulo <- clean_data_2 %>% group_by(rotulo) %>% summarise(mean(precio_gasoleo_a)) %>% View()
+
+
+# DEALING W COLS ----------------------------------------------------------
+
+clean_data_2 %>% mutate(low_cost = !rotulo %in% c("REPSOL","CEPSA","Q8","BP","SHELL","CAMPSA","GALP")) %>% View()
