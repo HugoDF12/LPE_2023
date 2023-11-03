@@ -77,16 +77,14 @@ clean_data_2 %>% glimpse()
 
 villa_boa_gas <- clean_data_2 %>% select(precio_gasoleo_a, rotulo, direccion, localidad) %>% 
   filter(localidad=="VILLAVICIOSA DE ODON" | localidad== "BOADILLA DEL MONTE") %>% 
-  arrange(precio_gasoleo_a) %>% View()
+  arrange(precio_gasoleo_a)
 
 gas_max <- clean_data_2 %>% select(precio_gasoleo_a, rotulo, direccion, provincia) %>% 
   filter(provincia == "MADRID") %>% arrange(precio_gasoleo_a) %>%  View()
 
-
 # STORING DATA ------------------------------------------------------------
 
 write_excel_csv(villa_boa_gas, "informe_madrid.xls")
-
 
 # WORKING W REPORTS -------------------------------------------------------
 
@@ -98,7 +96,6 @@ gas_mad_1_55 <- clean_data_2 %>% select(precio_gasoleo_a, rotulo, direccion, loc
 
 gas_mad_1_55 %>% leaflet() %>% addTiles() %>% addCircleMarkers(lat = ~latitud, lng = ~longitud_wgs84, popup=~rotulo, label=~precio_gasoleo_a)
 
-
 # CLASE 18 OCT ------------------------------------------------------------
 
 gas_mad_ballenoil <- clean_data_2 %>% select(precio_gasoleo_a, rotulo, direccion, localidad, provincia) %>% 
@@ -106,11 +103,9 @@ gas_mad_ballenoil <- clean_data_2 %>% select(precio_gasoleo_a, rotulo, direccion
 
 gas_mad_mean_rotulo <- clean_data_2 %>% group_by(rotulo) %>% summarise(mean(precio_gasoleo_a)) %>% View()
 
-
 # DEALING W COLS ----------------------------------------------------------
 
 clean_data_2 %>% mutate(low_cost = !rotulo %in% c("REPSOL","CEPSA","Q8","BP","SHELL","CAMPSA","GALP")) %>% View()
-
 
 # MEDIA GASOLEO_A EXTREMADURA ---------------------------------------------
 
@@ -122,7 +117,7 @@ filter(idccaa == "11") %>% summarise(mean_precio_gasoleo_a_ext = mean(precio_gas
 ccaa <- read_excel("codccaa_OFFCIAL.xls", skip=1)
 merged_df <- df %>% 
   left_join(ccaa, by = c("IDCCAA" = "CODIGO")) %>% 
-  rename("Comunidad_Autonoma" = LITERAL) %>% View()
+  rename("Comunidad_Autonoma" = LITERAL)
 
 # REPLACE IDCCAA ----------------------------------------------------------
 
@@ -131,4 +126,12 @@ copied_df <- merged_df
 copied_df$Comunidad_Autonoma[copied_df$IDCCAA == "07"] <- "Castilla-La Mancha"
 copied_df$Comunidad_Autonoma[copied_df$IDCCAA == "08"] <- "Castilla y León"
 
-copied_df %>% View()
+copied_df %>% View()S
+
+# ADDING POPULATION -------------------------------------------------------
+
+pob_mun <- read_excel("pobmun22.xlsx", skip = 1) %>% select(NOMBRE, POB22)
+
+pob_municipio <- merged_df %>%  
+  left_join(pob_mun, by = c("Municipio" = "NOMBRE"))
+
