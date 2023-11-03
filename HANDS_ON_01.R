@@ -133,5 +133,5 @@ copied_df %>% View()S
 pob_mun <- read_excel("pobmun22.xlsx", skip = 1) %>% select(NOMBRE, POB22)
 
 pob_municipio <- merged_df %>%  
-  left_join(pob_mun, by = c("Municipio" = "NOMBRE"))
+  inner_join(pob_mun, by = c("Municipio" = "NOMBRE"))
 
